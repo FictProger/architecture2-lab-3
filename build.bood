@@ -1,0 +1,21 @@
+go_testedbinary {
+  name: "server",
+  pkg: "github.com/FictProger/architecture2-lab-2/cmd/server",
+  srcs: [
+    "httptools/**/*.go",
+    "signal/**/*.go",
+    "cmd/server/*.go"
+  ],
+  testPkg: "./cmd/server/..."
+}
+
+go_testedbinary {
+  name: "lb",
+  pkg: "github.com/FictProger/architecture2-lab-2/cmd/lb",
+  srcs: [
+    "httptools/**/*.go",
+    "signal/**/*.go",
+    "cmd/lb/*.go"
+  ],
+  testPkg: "./cmd/lb/..."
+}
