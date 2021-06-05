@@ -39,6 +39,7 @@ func TestDb_Put(t *testing.T) {
 			if err != nil {
 				t.Errorf("Cannot put %s: %s", pairs[0], err)
 			}
+
 			value, err := db.Get(pair[0])
 			if err != nil {
 				t.Errorf("Cannot get %s: %s", pairs[0], err)
@@ -62,6 +63,7 @@ func TestDb_Put(t *testing.T) {
 				t.Errorf("Cannot put %s: %s", pairs[0], err)
 			}
 		}
+
 		outInfo, err := outFile.Stat()
 		if err != nil {
 			t.Fatal(err)
@@ -75,6 +77,7 @@ func TestDb_Put(t *testing.T) {
 		if err := db.Close(); err != nil {
 			t.Fatal(err)
 		}
+
 		db, err = NewDb(dir, "current-data", false)
 		if err != nil {
 			t.Fatal(err)
@@ -96,11 +99,12 @@ func TestDb_Put(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		
 		for i := 1; i < 40000; i++ {
 			db.Put(fmt.Sprintf("very_long_key_%d", i), "2222222222")
 		}
 
-		if _, err := os.Stat(path.Join(db.dir, "/segments", "segment_1")); os.IsNotExist(err) {
+		if _, err := os.Stat(path.Join(db.segPath, "segment_1")); os.IsNotExist(err) {
 			t.Fatal(err)
 		}
 
@@ -132,7 +136,7 @@ func TestDb_Put(t *testing.T) {
 		db.Close()
 
 		db, err = NewDb(dir, "current-data", false)
-		val, err := db.Get("key4")
+		val, err := db.Get("key4"); 
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -140,8 +144,6 @@ func TestDb_Put(t *testing.T) {
 		if val == "" {
 			t.Errorf("Bad value returned after reading from db value \"key4\" must be in db")
 		}
-
 	})
-
 }
 
