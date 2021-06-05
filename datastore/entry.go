@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"bufio"
+	"crypto/sha1"
 	"encoding/binary"
 	"fmt"
 )
@@ -13,25 +14,38 @@ type entry struct {
 func (e *entry) Encode() []byte {
 	kl := len(e.key)
 	vl := len(e.value)
-	size := kl + vl + 12
+	hash := sha1.Sum([]byte(e.value))
+	hl := len(hash)
+
+	size := kl + vl + hl + 12
 	res := make([]byte, size)
+
 	binary.LittleEndian.PutUint32(res, uint32(size))
 	binary.LittleEndian.PutUint32(res[4:], uint32(kl))
 	copy(res[8:], e.key)
-	binary.LittleEndian.PutUint32(res[kl+8:], uint32(vl))
-	copy(res[kl+12:], e.value)
+	copy(res[kl+8:], string(hash[:]))
+	binary.LittleEndian.PutUint32(res[kl+hl+8:], uint32(vl))
+	copy(res[kl+hl+12:], e.value)
+
 	return res
 }
 
+//TODO add error
 func (e *entry) Decode(input []byte) {
 	kl := binary.LittleEndian.Uint32(input[4:])
 	keyBuf := make([]byte, kl)
 	copy(keyBuf, input[8:kl+8])
 	e.key = string(keyBuf)
 
-	vl := binary.LittleEndian.Uint32(input[kl+8:])
+	hl := len(sha1.Sum([]byte{}))
+	//TODO clean
+	// hashBuf := make([]byte, hl)
+	// copy(hashBuf, input[kl+8:uint32(hl) + 8 + kl])
+	// hash := string(hashBuf) //TODO to sha1.Sum(keyBuf)
+
+	vl := binary.LittleEndian.Uint32(input[kl+8+uint32(hl):])
 	valBuf := make([]byte, vl)
-	copy(valBuf, input[kl+12:kl+12+vl])
+	copy(valBuf, input[kl+12+uint32(hl):kl+12+uint32(hl)+vl])
 	e.value = string(valBuf)
 }
 
@@ -42,6 +56,13 @@ func readValue(in *bufio.Reader) (string, error) {
 	}
 	keySize := int(binary.LittleEndian.Uint32(header[4:]))
 	_, err = in.Discard(keySize + 8)
+	if err != nil {
+		return "", err
+	}
+	
+	hl := len(sha1.Sum([]byte{}))
+	hash := make([]byte, hl)
+	n, err := in.Read(hash)
 	if err != nil {
 		return "", err
 	}
@@ -57,12 +78,17 @@ func readValue(in *bufio.Reader) (string, error) {
 	}
 
 	data := make([]byte, valSize)
-	n, err := in.Read(data)
+	n, err = in.Read(data)
 	if err != nil {
 		return "", err
 	}
 	if n != valSize {
 		return "", fmt.Errorf("can't read value bytes (read %d, expected %d)", n, valSize)
+	}
+
+	dataHash := sha1.Sum(data)
+	if string(dataHash[:]) != string(hash) {
+		return "", fmt.Errorf("wrong hash")
 	}
 
 	return string(data), nil

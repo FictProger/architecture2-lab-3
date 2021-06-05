@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"sync"
 )
 
 const (
@@ -28,6 +29,8 @@ var ErrNotFound = fmt.Errorf("record does not exist")
 type hashIndex map[string]int64
 
 type Db struct {
+	sync.Mutex
+
 	out *os.File
 	outPath string
 	dir string
@@ -84,6 +87,9 @@ func (db *Db) Close() error {
 }
 
 func (db *Db) Get(key string) (string, error) {
+	db.Lock()
+	defer db.Unlock()
+
 	position, ok := db.index[key]
 	if !ok {
 		for _, segment := range db.segmentsDb {
@@ -120,6 +126,9 @@ func (db *Db) Get(key string) (string, error) {
 }
 
 func (db *Db) Put(key, value string) error {
+	db.Lock()
+	defer db.Unlock()
+
 	e := entry{ key, value }
 
 	n, err := db.out.Write(e.Encode())
