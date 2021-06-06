@@ -1,12 +1,12 @@
 package main
 
 import (
-	// "encoding/json"
+	"bytes"
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
-	// "strconv"
 	"time"
 	"io"
 
@@ -24,12 +24,14 @@ func main() {
 	defClient := http.DefaultClient
 
 	putJsonStr := `{"value";"`+time.Now().Format("2021-04-25")+`"}`
-	r, err := http.NewRequest(
+	req, err := http.NewRequest(
 		"POST",
 		"http://db:8091/db/?key=FictProger",
 		bytes.NewBuffer([]byte(putJsonStr)),
 	)
-	if err != nil || r.StatusCode != http.StatusCreated {
+
+	res, err := defClient.Do(req)
+	if err != nil || res.StatusCode != http.StatusCreated {
 		log.Fatal(err)
 	}
 
