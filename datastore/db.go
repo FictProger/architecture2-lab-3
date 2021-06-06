@@ -141,7 +141,7 @@ func (db *Db) Put(key, value string) error {
 		db.out.Close()
 
 		outNewName := path.Join(db.segPath, fmt.Sprintf("/segment_%d", db.lastSegmentNum))
-		os.Rename(db.outPath, outNewName) //TODO check rename
+		os.Rename(db.outPath, outNewName)
 		os.Remove(db.outPath)
 
 		f, err := os.OpenFile(db.outPath, OS_OPEN_FLAG, OS_OPEN_PERM)

@@ -1,4 +1,4 @@
-module github.com/FictProger/architecture2-lab-2
+module github.com/FictProger/architecture2-lab-3
 
 go 1.15
 

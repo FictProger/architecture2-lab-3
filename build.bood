@@ -1,6 +1,6 @@
 go_testedbinary {
   name: "server",
-  pkg: "github.com/FictProger/architecture2-lab-2/cmd/server",
+  pkg: "github.com/FictProger/architecture2-lab-3/cmd/server",
   srcs: [
     "httptools/**/*.go",
     "signal/**/*.go",
@@ -11,11 +11,23 @@ go_testedbinary {
 
 go_testedbinary {
   name: "lb",
-  pkg: "github.com/FictProger/architecture2-lab-2/cmd/lb",
+  pkg: "github.com/FictProger/architecture2-lab-3/cmd/lb",
   srcs: [
     "httptools/**/*.go",
     "signal/**/*.go",
     "cmd/lb/*.go"
   ],
   testPkg: "./cmd/lb/..."
+}
+
+go_testedbinary {
+  name: "db",
+  pkg: "github.com/FictProger/architecture2-lab-3/cmd/db",
+  srcs: [
+    "httptools/**/*.go",
+    "datastore/**/*.go",
+    "signal/**/*.go",
+    "cmd/lb/*.go"
+  ],
+  testPkg: "./cmd/db/..."
 }

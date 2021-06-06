@@ -30,7 +30,6 @@ func (e *entry) Encode() []byte {
 	return res
 }
 
-//TODO add error
 func (e *entry) Decode(input []byte) {
 	kl := binary.LittleEndian.Uint32(input[4:])
 	keyBuf := make([]byte, kl)
@@ -38,10 +37,6 @@ func (e *entry) Decode(input []byte) {
 	e.key = string(keyBuf)
 
 	hl := len(sha1.Sum([]byte{}))
-	//TODO clean
-	// hashBuf := make([]byte, hl)
-	// copy(hashBuf, input[kl+8:uint32(hl) + 8 + kl])
-	// hash := string(hashBuf) //TODO to sha1.Sum(keyBuf)
 
 	vl := binary.LittleEndian.Uint32(input[kl+8+uint32(hl):])
 	valBuf := make([]byte, vl)
