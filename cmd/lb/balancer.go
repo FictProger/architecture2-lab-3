@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/FictProger/architecture2-lab-2/httptools"
-	"github.com/FictProger/architecture2-lab-2/signal"
+	"github.com/FictProger/architecture2-lab-3/httptools"
+	"github.com/FictProger/architecture2-lab-3/signal"
 )
 
 var (

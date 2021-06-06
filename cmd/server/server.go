@@ -10,8 +10,8 @@ import (
 	"time"
 	"io"
 
-	"github.com/FictProger/architecture2-lab-2/httptools"
-	"github.com/FictProger/architecture2-lab-2/signal"
+	"github.com/FictProger/architecture2-lab-3/httptools"
+	"github.com/FictProger/architecture2-lab-3/signal"
 )
 
 var port = flag.Int("port", 8080, "server port")

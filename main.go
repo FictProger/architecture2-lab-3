@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/FictProger/architecture2-lab-2/datastore"
+	"github.com/FictProger/architecture2-lab-3/datastore"
 )
 
 func main() {

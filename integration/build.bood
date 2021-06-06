@@ -1,5 +1,5 @@
 go_testedbinary {
   name: "integration",
-  pkg: "github.com/FictProger/architecture2-lab-2/integration",
+  pkg: "github.com/FictProger/architecture2-lab-3/integration",
   testPkg: "./..."
 }
